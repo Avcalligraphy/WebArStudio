@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./dist/output.css" />
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="shortcut icon" href="./assets/img/favicon.ico" />
+    <title>Lastalgia Works</title>
+</head>
+<body>
+
+<div class="">
+    <div class="flex flex-col ">
+        <div class="flex items-center cursor-pointer justify-between bg-white py-[7px] px-[30px]">
+            <div class="flex">
+                <img alt="logo" src="assets/logo.png" class="h-[30px] w-auto" />
+            </div>
+            <div class="sm:flex hidden gap-[20px]">
+                <div class="p-[5px] rounded-[6px]" >
+                    <a href="home.html"><i class="bx bx-home-alt text-[25px] text-[#525252] font-thin"></i></a>
+                </div>
+                <div class="p-[5px] rounded-[6px]">
+                    <a href="index.html"><i class="bx bx-message-square-add text-[25px] text-[#525252] font-thin"></i></a>
+                </div>
+                <div class="p-[5px] rounded-[6px]">
+                    <a href="profile.html"><i class="bx bx-user-circle text-[25px] text-[#525252] font-thin"></i></a>
+                </div>
+                <div class="p-[5px] rounded-[6px]">
+                    <button type="button" id="logoutButton">
+                        <i class="bx bx-power-off text-[25px] text-[#525252] font-thin"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="dropdownMenu sm:hidden block">
+            <button class="dropbtnMenu"><i class='bx bx-menu text-black text-[30px]'></i></button>
+            <div class="dropdown-contentMenu">
+                <a href="home.html">Home</a>
+                <a href="index.html">Add Image</a>
+                <a href="profile.html">Profile</a>
+                <a  type="button" id="logoutButtonDropdown">Logout</a>
+                <!-- <button type="button" id="logoutButtonDropdown">
+                        <i class="bx bx-power-off text-[25px] text-[#525252] font-thin"></i>
+                    </button> -->
+            </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<main class="">
+    <div>
+        <div class="w-full h-[1px] bg-[#E1E1E1]"></div>
+        <div class="flex justify-end bg-white py-[5px] px-[20px]"></div>
+        <div class="min-h-screen bg-white p-[30px]">
+            <h1 class="font-bold mb-[20px] text-[20px]">Lastalgia Works</h1>
+            <div id="patternContainer" class="grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-[30px]"></div>
+        </div>
+    </div>
+</main>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-app.js";
+    import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
+    import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyAyXn3hYGZjTLVUrGa5fVX-XgifZkqXtpg",
+        authDomain: "webar-609e0.firebaseapp.com",
+        databaseURL: "https://webar-609e0-default-rtdb.firebaseio.com",
+        projectId: "webar-609e0",
+        storageBucket: "webar-609e0.appspot.com",
+        messagingSenderId: "436573714098",
+        appId: "1:436573714098:web:9bcfefacfb44967df53bab"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase();
+    const starCountRef = ref(db, 'pattern/');
+    const LocalDate = (timestamp) => {
+     const dateObject = new Date(timestamp);
+
+     // Format tanggal dan waktu
+     const formattedDate = dateObject.toLocaleString();
+     return formattedDate
+  }
+
+  
+    onValue(starCountRef, (snapshot) => {
+        const data = snapshot.val();
+        console.log(Object.values(data))
+
+        // Membuat container untuk menampilkan data
+        const container = document.getElementById("patternContainer");
+
+        // Menghapus konten existing dalam container jika ada
+        container.innerHTML = '';
+      Object.values(data).forEach((item) => {
+        function myFunction() {
+            dropdownContent.classList.toggle("show");
+          }
+
+          window.onclick = function(event) {
+            if (!event.target.matches('.dropbtn')) {
+              const dropdowns = document.getElementsByClassName("dropdown-content");
+              for (let i = 0; i < dropdowns.length; i++) {
+                const openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                  openDropdown.classList.remove('show');
+                }
+              }
+            }
+          }
+        const patternContainer = document.createElement("div");
+        patternContainer.className = "border-[1px] border-[#E1E1E1] sm:w-[300px] w-[250px]";
+
+        const mediaElement = (item.type === "video") ? createVideoElement(item) : createImageElement(item);
+
+        const infoContainer = document.createElement("div");
+        infoContainer.className = "p-[10px] w-full";
+        const containerAdd = document.createElement("div");
+        containerAdd.className = "p-[10px] flex justify-between items-center";
+        const containerSetting = document.createElement("div");
+        containerSetting.className = "p-[10px] flex justify-end items-center";
+
+        const titleElement = document.createElement("h1");
+        titleElement.textContent = item.name; // Sesuaikan dengan properti data yang sesuai
+        const dateElement = document.createElement("h1");
+        dateElement.className = "text-[12px] mt-[20px]";
+        dateElement.textContent = LocalDate(item.timestamp); // Sesuaikan dengan properti data yang sesuai
+        const settingElement = document.createElement("img");
+        settingElement.className = "w-[5px] h-auto";
+        settingElement.src = "assets/setting.svg"; 
+        // Element Dropdown
+        const dropDownContainer = document.createElement("div");
+        dropDownContainer.className="dropdown"
+        const dropdownButton = document.createElement("img");
+        dropdownButton.src = "assets/setting.svg";
+        dropdownButton.className = "dropbtn";
+        dropdownButton.onclick = () => myFunction();
+
+        const dropdownContent = document.createElement("div");
+        dropdownContent.id = "myDropdown";
+        dropdownContent.className = "dropdown-content";
+
+        const links = [ "Download", "Delete"];
+        links.forEach(linkText => {
+        const link = document.createElement("a");
+        link.textContent = linkText;
+
+        // Modifikasi bagian ini untuk mengarahkan tombol sesuai kebutuhan
+        // if (linkText === "Edit") {
+        //     link.href = "https://otakudesu.media/";
+        // } else if (linkText === "Download") {
+        //      link.href = item.markerPatternImage;
+        //      link.target = "_blank";
+        // } else if (linkText === "Delete") {
+        //     // Menggunakan fungsi deleteFirebase dengan parameter item.id
+        //     link.addEventListener("click", () => deleteFirebase(item.id));
+        // }
+
+        // dropdownContent.appendChild(link);
+        // });
+         if (linkText === "Download") {
+             link.href = item.markerPatternImage;
+             link.target = "_blank";
+        } else if (linkText === "Delete") {
+            // Menggunakan fungsi deleteFirebase dengan parameter item.id
+            link.addEventListener("click", () => deleteFirebase(item.id));
+        }
+
+        dropdownContent.appendChild(link);
+        });
+        function deleteFirebase(itemId) {
+            remove(ref(db, `pattern/${itemId}`));
+}
+
+        containerAdd.appendChild(titleElement);
+        containerAdd.appendChild(dropDownContainer);
+        dropDownContainer.appendChild(dropdownButton)
+        dropDownContainer.appendChild(dropdownContent)
+        containerSetting.appendChild(dateElement);
+        infoContainer.appendChild(containerAdd);
+        infoContainer.appendChild(containerSetting);
+        patternContainer.appendChild(mediaElement);
+        patternContainer.appendChild(infoContainer);
+        container.appendChild(patternContainer);
+    });
+});
+
+function createVideoElement(item) {
+    const videoElement = document.createElement("video");
+    videoElement.controls = true;
+    videoElement.autoPlay = true;
+    videoElement.className = "sm:w-[300px] w-[250px] h-[200px]";
+    videoElement.src = item.image; // Sesuaikan dengan properti data yang sesuai
+    return videoElement;
+}
+function createImageElement(item) {
+    const imageElement = document.createElement("img");
+    imageElement.className = "sm:w-[300px] w-[250px] h-[200px]";
+    imageElement.src = item.image; // Sesuaikan dengan properti data yang sesuai
+    return imageElement;
+}
+    onAuthStateChanged(auth, (user) => {
+        if (!user) {
+            // Jika pengguna belum login, arahkan ke halaman login
+            window.location.href = "login.html";
+        }
+    });
+
+    const logoutButton = document.getElementById("logoutButton");
+    const logoutButtonDropdown = document.getElementById("logoutButtonDropdown");
+
+    logoutButton.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        // Melakukan logout
+        signOut(auth)
+            .then((success) => {
+                // Logout berhasil, arahkan ke halaman login atau halaman lain yang sesuai
+                window.location.href = "login.html";
+                console.error("Berhasil Logout");
+            })
+            .catch((error) => {
+                console.error("Logout Error:", error);
+            });
+    });
+    logoutButtonDropdown.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        // Melakukan logout
+        signOut(auth)
+            .then((success) => {
+                // Logout berhasil, arahkan ke halaman login atau halaman lain yang sesuai
+                window.location.href = "login.html";
+                console.error("Berhasil Logout");
+            })
+            .catch((error) => {
+                console.error("Logout Error:", error);
+            });
+    });
+</script>
+
+</body>
+</html>

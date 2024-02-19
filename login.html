@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="./dist/output.css" />
+    <link rel="shortcut icon" href="./assets/img/favicon.ico" />
+    <link rel="stylesheet" href="./marker.css" />
+    <link rel="stylesheet" href="./style.css" />
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+</head>
+<body>
+<div class="flex md:h-[200px] h-[250px] p-[30px] bg-[#E1E1E1">
+    <img
+    alt="logo"
+    src="assets/logoWhite.png"
+    class="mb-[20px] h-[50px] w-auto"
+  />
+</div>
+<div class="flex justify-center gap-[50px] bg-white">
+  <div class='md:block hidden '>
+    <video
+      controls
+      loop
+      autoplay
+      class="rounded-[30px] p-[6px] bg-black mt-[30px]"
+    >
+      <source src="video/video.mp4" type="video/mp4" />
+    </video>
+  </div>
+  <div class="bg-white border-[1px] border-[#E1E1E1] p-[30px] shadow-sm shadow-[#E1E1E1] mt-[-100px] md:w-fit w-full">
+    <h1 class="font-semibold text-[18px] mb-[30px]">
+      Welcome To Lastalgia!
+    </h1>
+    <div class="mb-[20px] block">
+      <div>
+        <label
+        for="email"
+        class="text-black font-semibold"
+      >
+        Email Address
+      </label>
+      </div>
+      <input
+        class="py-[10px] px-[10px]  md:w-[400px] w-full text-black bg-gray-200 rounded-[12px] mt-[16px]"
+        type="email"
+        name="email"
+        id="email"
+        value=""
+        placeholder="Email Address"
+        autocomplete="username"
+        autofocus
+      />
+    </div>
+    <div class="mb-[20px]">
+     <div>
+         <label
+        for="password"
+        class="text-black font-semibold"
+      >
+        Password
+      </label>
+     </div>
+      <input
+        class="py-[10px]  md:w-[400px] w-full text-black bg-gray-200 px-[10px] rounded-[12px] mt-[16px]"
+        type="password"
+        name="password"
+        id="password"
+        value=""
+        placeholder="Password"
+        autocomplete="current-password"
+ 
+      />
+    </div>
+    <button
+      type="submit"
+      id="signIn"
+      class="w-full mb-[30px] bg-[#527A87] p-[10px] text-white rounded-[12px]"
+    >
+      Login
+    </button>
+    <div class="w-full h-1 bg-[#527A87]"></div>
+  </div>
+</div>
+<!-- <div class="bg-white w-full h-[300px]">
+  <div class='sm:hidden flex justify-center items-center'>
+    <h1 class='text-black'>Hanya Dapat di Akses di Laptop</h1>
+  </div>
+</div> -->
+</body>
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-app.js";
+  import { getDatabase } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
+  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyAyXn3hYGZjTLVUrGa5fVX-XgifZkqXtpg",
+    authDomain: "webar-609e0.firebaseapp.com",
+    databaseURL: "https://webar-609e0-default-rtdb.firebaseio.com",
+    projectId: "webar-609e0",
+    storageBucket: "webar-609e0.appspot.com",
+    messagingSenderId: "436573714098",
+    appId: "1:436573714098:web:9bcfefacfb44967df53bab"
+  };
+
+   const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+        const auth = getAuth(app);
+
+        const checkUserAuth = () => {
+            // Memeriksa status autentikasi pengguna
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    // Jika pengguna sudah login, arahkan ke halaman home
+                    window.location.href = "home.html";
+                }
+            });
+        };
+
+        // Memanggil fungsi untuk memeriksa status autentikasi saat halaman dimuat
+        checkUserAuth();
+
+        const signInButton = document.getElementById("signIn");
+
+        signInButton.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            var email = document.getElementById("email").value;
+            var password = document.getElementById("password").value;
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // Login berhasil
+                    const uid = userCredential.user.uid;
+
+                    // Redirect ke halaman home setelah login
+                    localStorage.setItem("uid", uid )
+                    window.location.href = "home.html";
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    alert("Login Error: " + errorMessage);
+                });
+        });
+    </script>
+</html>

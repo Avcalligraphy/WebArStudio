@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Edit Lastalgia</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+     <link rel="shortcut icon" href="./assets/img/favicon.ico" />
+
+    <!-- import the webpage's stylesheet -->
+    <link rel="stylesheet" href="./dist/output.css" />
+    <link rel="stylesheet" href="./marker.css" />
+    <link rel="stylesheet" href="./style.css" />
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <!-- import studio-backend api -->
+    <script
+        src="https://raw.githack.com/AR-js-org/studio-backend/master/dist/arjs-studio-backend.min.js"></script>
+
+    <!-- import aframe to support model preview -->
+    <script src="https://aframe.io/releases/1.0.4/aframe.js"></script>
+    <script src="https://cdn.statically.io/gh/donmccurdy/aframe-extras/fe293f78/dist/aframe-extras.loaders.js"></script>
+
+    <!-- import JsZip -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.3.0/jszip.min.js"></script>
+
+    <!-- import web components -->
+    <script src="./components/back-anchor/back-anchor.js"></script>
+    <script src="./components/file-holder/file-holder.js"></script>
+    <script src="./components/file-select/file-select.js"></script>
+    <script src="./components/header/header.js"></script>
+    <script src="./components/footer/footer.js"></script>
+    <script src="./components/model-controller/model-controller.js"></script>
+    <script src="./components/feedback/stickybutton.js"></script>
+
+    <!-- import utils -->
+    <script src="./utils/fileHelper.js"></script>
+    <script src="./utils/fileTemplate.js"></script>
+    <script src="./utils/fileHandler.js"></script>
+    <script src="./marker.js" defer></script>
+
+    <script src="https://www.gstatic.com/firebasejs/6.0.2/firebase.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
+    
+    
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-app.js";
+    import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
+  
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+       apiKey: "AIzaSyAyXn3hYGZjTLVUrGa5fVX-XgifZkqXtpg",
+      authDomain: "webar-609e0.firebaseapp.com",
+      databaseURL: "https://webar-609e0-default-rtdb.firebaseio.com",
+      projectId: "webar-609e0",
+      storageBucket: "webar-609e0.appspot.com",
+      messagingSenderId: "436573714098",
+      appId: "1:436573714098:web:9bcfefacfb44967df53bab"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    
+    onAuthStateChanged(auth, (user) => {
+        if (!user) {
+            // Jika pengguna belum login, arahkan ke halaman login
+            window.location.href = "login.html";
+        }
+    });
+
+    const logoutButton = document.getElementById("logoutButton");
+
+    logoutButton.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        // Melakukan logout
+        signOut(auth)
+            .then((success) => {
+                // Logout berhasil, arahkan ke halaman login atau halaman lain yang sesuai
+                window.location.href = "login.html";
+                console.error("Berhasil Logout");
+            })
+            .catch((error) => {
+                console.error("Logout Error:", error);
+            });
+    });
+</script>
+
+</head>
+
+<body onload="setDefaultMarker()">
+  
+        <div class="">
+          <div class=" flex flex-col ">
+           <div class="flex items-center cursor-pointer justify-between bg-white py-[7px] px-[30px]">
+        <div class="sm:flex block items-center">
+          <img alt="logo" src="assets/logo.png"  class="w-auto h-[30px] mr-[30px]"/>
+          <input type="text" id="markerInfo" placeholder="Project Name" class="p-[15px] bg-gray-300 rounded-[12px] sm:mt-0 my-[8px]"/>
+        </div>
+        <div class="sm:flex hidden gap-[20px]">
+            <div
+              class= "p-[5px] rounded-[6px]"
+            >
+              <a href="home.html"><i class="bx bx-home-alt text-[25px] text-[#525252] font-thin"></i></a>
+            </div>
+            <div
+              class= "p-[5px] rounded-[6px]"
+            >
+              <a href="index.html"><i class="bx bx-message-square-add text-[25px] text-[#525252] font-thin"></i></a>
+            </div>
+            <div
+              class= "p-[5px] rounded-[6px]"
+            >
+              <a href="profile.html"><i class="bx bx-user-circle text-[25px] text-[#525252] font-thin"></i></a>
+            </div>
+            <div
+              class= "p-[5px] rounded-[6px]"
+            >
+              <button type="button" id="logoutButton">
+                  <i class="bx bx-power-off text-[25px] text-[#525252] font-thin"></i>
+              </button>
+            </div>
+        </div>
+            <div class="dropdownMenu sm:hidden block">
+            <button class="dropbtnMenu"><i class='bx bx-menu text-black text-[30px]'></i></button>
+            <div class="dropdown-contentMenu">
+                <a href="home.html">Home</a>
+                <a href="index.html">Add Image</a>
+                <a href="profile.html">Profile</a>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  <div class="p-[10px] w-full">
+    <div class="flex px-[16px] py-[5px] bg-white rounded-[4px] items-center justify-between">
+      <div class="flex items-center">
+            <div class="h-[30px] w-[3px] bg-[#E1E1E1] ml-[5px]" ></div>
+            <div class="bg-white hover:bg-[#E1E1E1] py-[5px] px-[10px] rounded-[6px] ml-[5px]">
+              <h1 class="text-[18px]">Lastalgia Info</h1>
+            </div>
+            <div class="h-[30px] w-[3px] bg-[#E1E1E1] mx-[5px]" ></div>
+          </div>
+          <div class="flex gap-[20px]">
+            <page-footer></page-footer>
+            <feedback-button></feedback-button>
+
+          </div>
+          </div>
+    <div class="xl:flex block  w-full gap-[10px] mt-[9px]">
+          <div
+            class="min-h-screen xl:w-[50%] w-[100%] bg-white"
+          >
+            <div
+              class="flex justify-center items-center xl:mt-[350px] mt-0"
+            >
+              <div id="marker-preview" target="marker-file">
+                <div class="marker">
+                    <img src="./assets/default-marker.png" alt="Default marker png"/>
+                </div>
+                <div class="download-marker" style="display: flex; justify-content: flex-end; padding: 1em 0;">
+                    <div class="download-default-marker">
+                        <span>
+                            <svg width="17" height="16" viewBox="0 0 17 16" fill="none">
+                                <path d="M16.5 8L15.09 6.59L9.5 12.17V0H7.5V12.17L1.92 6.58L0.5 8L8.5 16L16.5 8Z" fill="black"/>
+                            </svg>
+                        </span>
+                        <a class="filename" style="text-decoration: none; color: black; justify-self: flex-end;" href="./assets/default-marker.png" download>Download marker</a>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <div class="flex justify-center items-center ">
+              <label class="passive-button">
+                    <input id="marker-file" type="file" accept="image/png, image/jpeg" hidden
+                        onchange="handleMarkerUpload(this)" />
+                    Upload image
+                </label>
+                <p id="marker-error" class="error"></p>
+            </div>
+          </div>
+          <div
+            class="min-h-screen xl:w-[50%] w-[100%] bg-white"
+          >
+            <div
+              class="flex justify-center items-center xl:mt-[350px] mt-[15px]"
+            >
+              <div id="content-preview" target="content-file">
+                <file-holder></file-holder>
+            </div>
+            </div>
+          <div class="flex justify-center items-center ">
+            <label class="passive-button file-input">
+                    <input id="content-file" accept="*" type="file" hidden onchange="handleContentUpload(this)" />
+                    Upload file
+                </label>
+                <p id="content-error" class="error"></p>
+            </div>
+          </div>
+            <!-- <h1
+              class="text-center mt-[10px]"
+            >
+              ADD <span class="font-bold">VIDEO</span>
+            </h1> -->
+        </div>
+</div>
+
+</body>
+
+</html>

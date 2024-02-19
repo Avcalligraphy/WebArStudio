@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drag and Drop Image</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="drop-area" class="drop-area" ondrop="dropHandler(event)" ondragover="dragOverHandler(event)">
+    <p>Drag & Drop an image file here</p>
+    <!-- <input type="file" id="fileElem" accept="image/*" onchange="handleFiles(this.files)"> -->
+  </div>
+  <button onclick="selectFile()">Select Image</button>
+  <script src="script.js"></script>
+</body>
+</html>
